@@ -5,13 +5,17 @@
   "repository": "git@github.com:engramhq/password.git",
   "author": "Adam Berg <adam@xyzdigital.com>",
   "scripts": {
+    "build": "esbuild web/index.tsx --outfile=static/js/app.js --bundle --minify",
     "start": "ts-node server.ts"
   },
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.14",
+    "esbuild": "^0.15.10",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
   }

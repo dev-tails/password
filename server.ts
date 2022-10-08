@@ -6,8 +6,7 @@ const app = express();
 
 const port = process.env.PORT || 8080;
 
-app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 app.post("/", (req, res) => {
   const { masterPassword, title, password } = req.body;
@@ -37,7 +36,7 @@ app.post("/", (req, res) => {
   ciphered += cipher.final(outputEncoding);
   const ciphertext = iv.toString(outputEncoding) + ":" + ciphered + '\n';
 
-  fs.appendFileSync("passwords.txt", ciphertext, "utf8");
+  fs.appendFileSync("static/passwords.txt", ciphertext, "utf8");
 
   res.sendStatus(200);
 });
