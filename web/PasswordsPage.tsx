@@ -7,6 +7,11 @@ export const PasswordsPage: React.FC = () => {
   const { masterPassword, passwordItems, setPasswordItems } =
     useContext(GlobalStateContext);
 
+
+  const passwordItemsForDisplay = passwordItems.sort((a, b) => {
+    return a.title > b.title ? 1 : -1;
+  })
+
   function handleAddPassword(passwordItem: PasswordItem) {
     const newPasswordItems = [...passwordItems, passwordItem];
 
@@ -41,7 +46,7 @@ export const PasswordsPage: React.FC = () => {
         </thead>
         <tbody>
           <AddPasswordRow onSave={handleAddPassword} />
-          {passwordItems.map((passwordItem) => {
+          {passwordItemsForDisplay.map((passwordItem) => {
             return (
               <PasswordRow
                 key={passwordItem.id}
