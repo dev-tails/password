@@ -17,7 +17,7 @@ export const MasterPasswordPage: React.FC = () => {
         ).toString(CryptoJS.enc.Utf8);
 
         const passwordItems = JSON.parse(deciphered);
-        setPasswordItems(passwordItems);
+        setPasswordItems(passwordItems, false);
       }
 
       setMasterPassword(password);
@@ -30,6 +30,7 @@ export const MasterPasswordPage: React.FC = () => {
     <div>
       <input
         placeholder="Master Password"
+        type={"password"}
         value={password}
         onChange={(e) => {
           setPassword(e.currentTarget.value);

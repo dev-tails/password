@@ -13,6 +13,19 @@ export const PasswordsPage: React.FC = () => {
     setPasswordItems(newPasswordItems);
   }
 
+  function handleSavePassword(updatedPasswordItem: PasswordItem) {
+    const clonedItems = [...passwordItems];
+    for (let i = 0; i < passwordItems.length; i++) {
+      const oldPasswordItem = clonedItems[i];
+      if (oldPasswordItem.id === updatedPasswordItem.id) {
+        clonedItems[i] = updatedPasswordItem;
+        break;
+      }
+    }
+
+    setPasswordItems(clonedItems);
+  }
+
   const thStyle: React.CSSProperties = {
     textAlign: "left",
   };
@@ -30,7 +43,11 @@ export const PasswordsPage: React.FC = () => {
           <AddPasswordRow onSave={handleAddPassword} />
           {passwordItems.map((passwordItem) => {
             return (
-              <PasswordRow key={passwordItem.id} passwordItem={passwordItem} />
+              <PasswordRow
+                key={passwordItem.id}
+                passwordItem={passwordItem}
+                onSave={handleSavePassword}
+              />
             );
           })}
         </tbody>
@@ -71,8 +88,8 @@ const AddPasswordRow: React.FC<AddPasswordRowProps> = ({ onSave }) => {
   }
 
   const actionTdStyle: React.CSSProperties = {
-    width: 52
-  }
+    width: 52,
+  };
 
   return (
     <tr>
@@ -88,6 +105,7 @@ const AddPasswordRow: React.FC<AddPasswordRowProps> = ({ onSave }) => {
       <td>
         <input
           placeholder="password"
+          type={"password"}
           value={password}
           onChange={(e) => {
             setPassword(e.currentTarget.value);
@@ -104,16 +122,29 @@ const AddPasswordRow: React.FC<AddPasswordRowProps> = ({ onSave }) => {
   );
 };
 
-const PasswordRow: React.FC<{ passwordItem: PasswordItem }> = ({
-  passwordItem,
-}) => {
+type PasswordRowProps = {
+  passwordItem: PasswordItem;
+  onSave: (PasswordItem) => void;
+};
+
+const PasswordRow: React.FC<PasswordRowProps> = ({ passwordItem, onSave }) => {
   const { passwordItems, setPasswordItems } = useContext(GlobalStateContext);
+  const [title, setTitle] = useState(passwordItem.title);
+  const [password, setPassword] = useState(passwordItem.password);
 
   const [hidden, setHidden] = useState(true);
-  const [editting, setEditting] = useState(true);
+  const [editting, setEditting] = useState(false);
 
   function handleEdit() {
+    setHidden(false);
     setEditting(!editting);
+  }
+
+  function handleCancel() {
+    setTitle(passwordItem.title);
+    setPassword(passwordItem.password);
+    setEditting(false);
+    setHidden(true);
   }
 
   function handleDelete() {
@@ -130,11 +161,24 @@ const PasswordRow: React.FC<{ passwordItem: PasswordItem }> = ({
 
   return (
     <tr key={passwordItem.title}>
-      <td>{passwordItem.title}</td>
+      <td>
+        <input
+          type="text"
+          value={title}
+          readOnly={editting ? false : true}
+          onChange={(e) => {
+            setTitle(e.currentTarget.value);
+          }}
+        />
+      </td>
       <td>
         <input
           type={hidden ? "password" : "text"}
-          value={passwordItem.password}
+          value={password}
+          readOnly={editting ? false : true}
+          onChange={(e) => {
+            setPassword(e.currentTarget.value);
+          }}
         />
       </td>
       <td>
@@ -146,9 +190,27 @@ const PasswordRow: React.FC<{ passwordItem: PasswordItem }> = ({
           {hidden ? "Show" : "Hide"}
         </button>
       </td>
-      <td>
-        <button onClick={handleEdit}>Edit</button>
-      </td>
+
+      {editting ? (
+        <>
+          <td>
+            <button onClick={handleCancel}>Cancel</button>
+          </td>
+          <td>
+            <button
+              onClick={() => {
+                onSave({ ...passwordItem, password, title });
+              }}
+            >
+              Save
+            </button>
+          </td>
+        </>
+      ) : (
+        <td>
+          <button onClick={handleEdit}>Edit</button>
+        </td>
+      )}
       <td>
         <button onClick={handleDelete}>Del</button>
       </td>

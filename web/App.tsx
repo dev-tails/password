@@ -6,12 +6,12 @@ import { GlobalStateContext } from "./GlobalStateContext";
 import { PasswordItem } from "./PasswordItemType";
 
 export const App: React.FC = () => {
-  const [masterPassword, setMasterPassword] = useState("password");
+  const [masterPassword, setMasterPassword] = useState("");
   const [passwordItems, setPasswordItemsState] = useState<PasswordItem[]>([]);
 
   function setPasswordItems(
     passwordItems: PasswordItem[],
-    updateLocalStorage = false
+    updateLocalStorage = true
   ) {
     if (updateLocalStorage) {
       const ciphertext = CryptoJS.AES.encrypt(
