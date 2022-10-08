@@ -15,6 +15,7 @@ export const MasterPasswordPage: React.FC = () => {
           passwordsDataLocalStorage,
           password
         ).toString(CryptoJS.enc.Utf8);
+
         const passwordItems = JSON.parse(deciphered);
         setPasswordItems(passwordItems);
       }

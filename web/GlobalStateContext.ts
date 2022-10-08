@@ -5,7 +5,7 @@ export const defaultGlobalState = {
   masterPassword: "",
   setMasterPassword(value: string) {},
   passwordItems: [] as PasswordItem[],
-  setPasswordItems(value: PasswordItem[]) {},
+  setPasswordItems(value: PasswordItem[], updateLocalStorage: boolean = true) {},
 }
 
 export const GlobalStateContext = React.createContext(defaultGlobalState);

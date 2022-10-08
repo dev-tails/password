@@ -2,37 +2,36 @@ import React, { useContext, useState } from "react";
 import { GlobalStateContext } from "./GlobalStateContext";
 import { PasswordItem } from "./PasswordItemType";
 import { v4 as uuidv4 } from "uuid";
-import CryptoJS from "crypto-js";
 
 export const PasswordsPage: React.FC = () => {
-  const { masterPassword, passwordItems, setPasswordItems } = useContext(GlobalStateContext);
+  const { masterPassword, passwordItems, setPasswordItems } =
+    useContext(GlobalStateContext);
 
   function handleAddPassword(passwordItem: PasswordItem) {
     const newPasswordItems = [...passwordItems, passwordItem];
 
-    const ciphertext = CryptoJS.AES.encrypt(
-      JSON.stringify(newPasswordItems),
-      masterPassword
-    ).toString();
-
-    localStorage.setItem("passwords", ciphertext);
-
     setPasswordItems(newPasswordItems);
   }
+
+  const thStyle: React.CSSProperties = {
+    textAlign: "left",
+  };
 
   return masterPassword ? (
     <table>
       <>
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Password</th>
+            <th style={thStyle}>Title</th>
+            <th style={thStyle}>Password</th>
           </tr>
         </thead>
         <tbody>
           <AddPasswordRow onSave={handleAddPassword} />
           {passwordItems.map((passwordItem) => {
-            return <PasswordRow passwordItem={passwordItem} />;
+            return (
+              <PasswordRow key={passwordItem.id} passwordItem={passwordItem} />
+            );
           })}
         </tbody>
       </>
@@ -102,7 +101,26 @@ const AddPasswordRow: React.FC<AddPasswordRowProps> = ({ onSave }) => {
 const PasswordRow: React.FC<{ passwordItem: PasswordItem }> = ({
   passwordItem,
 }) => {
+  const { passwordItems, setPasswordItems } = useContext(GlobalStateContext);
+
   const [hidden, setHidden] = useState(true);
+  const [editting, setEditting] = useState(true);
+
+  function handleEdit() {
+    setEditting(!editting);
+  }
+
+  function handleDelete() {
+    if (
+      confirm(`Are you sure you would like to delete ${passwordItem.title}?`)
+    ) {
+      setPasswordItems(
+        passwordItems.filter((p) => {
+          return p.id != passwordItem.id;
+        })
+      );
+    }
+  }
 
   return (
     <tr key={passwordItem.title}>
@@ -121,6 +139,12 @@ const PasswordRow: React.FC<{ passwordItem: PasswordItem }> = ({
         >
           {hidden ? "Show" : "Hide"}
         </button>
+      </td>
+      <td>
+        <button onClick={handleEdit}>Edit</button>
+      </td>
+      <td>
+        <button onClick={handleDelete}>Del</button>
       </td>
     </tr>
   );
