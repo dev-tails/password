@@ -7,8 +7,16 @@ export const PasswordsPage: React.FC = () => {
   const { masterPassword, passwordItems, setPasswordItems } =
     useContext(GlobalStateContext);
 
+    const [search, setSearch] = useState("");
 
-  const passwordItemsForDisplay = passwordItems.sort((a, b) => {
+
+  const passwordItemsForDisplay = passwordItems.filter((p) => {
+    if (search) {
+      return p.title.includes(search);
+    } else {
+      return true;
+    }
+  }).sort((a, b) => {
     return a.title > b.title ? 1 : -1;
   })
 
@@ -36,6 +44,8 @@ export const PasswordsPage: React.FC = () => {
   };
 
   return masterPassword ? (
+    <>
+    <input placeholder="Search" value={search} onChange={(e) => {setSearch(e.currentTarget.value)}}/>
     <table>
       <>
         <thead>
@@ -58,6 +68,7 @@ export const PasswordsPage: React.FC = () => {
         </tbody>
       </>
     </table>
+    </>
   ) : null;
 };
 
