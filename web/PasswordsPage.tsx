@@ -66,6 +66,12 @@ const AddPasswordRow: React.FC<AddPasswordRowProps> = ({ onSave }) => {
       title,
       password,
     });
+    setPassword("");
+    setTitle("");
+  }
+
+  const actionTdStyle: React.CSSProperties = {
+    width: 52
   }
 
   return (
@@ -88,10 +94,10 @@ const AddPasswordRow: React.FC<AddPasswordRowProps> = ({ onSave }) => {
           }}
         />
       </td>
-      <td>
+      <td style={actionTdStyle}>
         <button onClick={handleGenPassClicked}>Gen</button>
       </td>
-      <td>
+      <td style={actionTdStyle}>
         <button onClick={handleAddClicked}>Add</button>
       </td>
     </tr>
